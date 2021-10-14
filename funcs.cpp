@@ -42,6 +42,18 @@ bool checkPointsCover(int l, int k, const std::vector<int> & v){
     return false;
 }
 
+void analyzeV(const std::vector<int> & v, int & maxDist, int & minDist){
+    maxDist = 0;
+    minDist = v.back() - v[0];
+    for(int i=1;i<v.size();++i){
+        int dist =v[i]-v[i-1];
+        if(dist>maxDist)
+            maxDist = dist;
+        if(dist < minDist)
+            minDist = dist;
+    }
+}
+
 void parseFile(std::istream & input, std::ostream & output){
     int n, k;
     input>>n>>k;
@@ -51,7 +63,10 @@ void parseFile(std::istream & input, std::ostream & output){
 
     std::sort(numbers.begin(), numbers.end());
     int minNumber = numbers[0], maxNumber = numbers.back();
-    int minL = 1, maxL = abs(maxNumber-minNumber-1);
+    int minL = 0, maxL = abs(maxNumber-minNumber-1);
+
+    //int minDist, maxDist;
+    //analyzeV(numbers,maxDist,minDist);
 
     auto func=[&k, &numbers]
             (int l){

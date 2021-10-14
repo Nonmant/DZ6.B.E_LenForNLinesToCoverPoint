@@ -27,21 +27,21 @@ TEST_CASE("test 1, file", "[simple]"){
     outputCheck.close();
     REQUIRE(buffer.str() == "2\n");
 }
-/*
-TEST_CASE("file 015", ""){
-    std::ifstream input( "../015", std::ofstream::in);
+
+TEST_CASE("file 017", ""){
+    std::ifstream input( "../017", std::ofstream::in);
     std::stringstream output;
     parseFile(input,output);
     input.close();
-    REQUIRE(output.str() == "333333333333333333\n");
+    REQUIRE(output.str() == "0\n");
 }
-*/
+
 TEST_CASE("one digit, one line", ""){
     std::stringstream input, output;
     input<<"1 1\n"
            "3";
     parseFile(input,output);
-    REQUIRE(output.str() == "1\n");
+    REQUIRE(output.str() == "0\n");
 }
 
 TEST_CASE("one digit, more lines", ""){
@@ -49,7 +49,7 @@ TEST_CASE("one digit, more lines", ""){
     input<<"1 123\n"
            "3";
     parseFile(input,output);
-    REQUIRE(output.str() == "1\n");
+    REQUIRE(output.str() == "0\n");
 }
 
 TEST_CASE("one zero digit, more lines", ""){
@@ -57,7 +57,7 @@ TEST_CASE("one zero digit, more lines", ""){
     input<<"1 123\n"
            "0";
     parseFile(input,output);
-    REQUIRE(output.str() == "1\n");
+    REQUIRE(output.str() == "0\n");
 }
 
 TEST_CASE("all negative", ""){
