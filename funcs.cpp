@@ -42,16 +42,39 @@ bool checkPointsCover(int l, int k, const std::vector<int> & v){
     return false;
 }
 
-void analyzeV(const std::vector<int> & v, int & maxDist, int & minDist){
-    maxDist = 0;
-    minDist = v.back() - v[0];
-    for(int i=1;i<v.size();++i){
-        int dist =v[i]-v[i-1];
-        if(dist>maxDist)
-            maxDist = dist;
-        if(dist < minDist)
-            minDist = dist;
+std::vector<int> getDistances(const std::vector<int> &v){
+    std::vector<int> ans(v.size()-1);
+    int iMax = v.size()-1;
+    for (int i = 0; i < iMax; ++i) {
+        ans[i] = v[i+1]-v[i];
     }
+    std::sort(ans.begin(),ans.end(),std::greater<>());
+    return ans;
+}
+
+std::pair<int,int> getRange(const std::vector<int> &v, int n, int k){
+    int minNumber = v[0], maxNumber = v.back();
+    int minL = 0, maxL = abs(maxNumber-minNumber);
+
+    if(k>=n){
+        return {0,0};
+    }
+
+    if(k==1){
+        return {maxL, maxL};
+    }
+
+    std::vector<int> distances = getDistances(v);//n-1 len, descending order
+
+    minL = distances[distances.size()-k];
+
+    int iMax = k-1;
+    for(int i = 1; i<iMax; ++i){
+        maxL-=distances[i-1];
+    }
+
+    minL = fmin(minL,maxL);
+    return {minL,maxL};
 }
 
 void parseFile(std::istream & input, std::ostream & output){
@@ -62,18 +85,13 @@ void parseFile(std::istream & input, std::ostream & output){
     std::copy_n(std::istream_iterator<int>(input),n,numbers.begin());
 
     std::sort(numbers.begin(), numbers.end());
-    int minNumber = numbers[0], maxNumber = numbers.back();
-    int minL = 0, maxL = abs(maxNumber-minNumber-1);
-
-    //int minDist, maxDist;
-    //analyzeV(numbers,maxDist,minDist);
 
     auto func=[&k, &numbers]
             (int l){
         return checkPointsCover(l,k,numbers);
     };
-
-    int ans = indexOfFirst(func,minL,maxL);
+    std::pair<int,int> range = getRange(numbers,n,k);
+    int ans = indexOfFirst(func, range.first, range.second);
 
     output<<ans<<'\n';
 }
