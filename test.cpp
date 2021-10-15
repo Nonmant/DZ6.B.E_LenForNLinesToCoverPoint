@@ -29,11 +29,23 @@ TEST_CASE("test 1, file", "[simple]"){
 }
 
 TEST_CASE("file 017", ""){
-    std::ifstream input( "../017", std::ofstream::in);
+    BENCHMARK("Can cover with 0 len"){
+        std::ifstream input( "../017", std::ofstream::in);
+        std::stringstream output;
+        parseFile(input,output);
+        input.close();
+        REQUIRE(output.str() == "0\n");
+    };
+}
+
+TEST_CASE("file 018", ""){
+    BENCHMARK("Should cover with 1 line"){
+    std::ifstream input( "../018", std::ofstream::in);
     std::stringstream output;
     parseFile(input,output);
     input.close();
-    REQUIRE(output.str() == "0\n");
+    REQUIRE(output.str() == "1999975600\n");
+    };
 }
 
 TEST_CASE("one digit, one line", ""){
